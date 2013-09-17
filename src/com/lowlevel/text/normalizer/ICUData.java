@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.MissingResourceException;
+import java.util.zip.GZIPInputStream;
 
 /**
  * Provides access to ICU data files as InputStreams.  Implements security checking.
@@ -59,6 +60,14 @@ public final class ICUData {
                 });
         } else {
             i = root.getClassLoader().getResourceAsStream(resourceName);
+        }
+        
+        if (i != null) {
+        	try {
+        		i = new GZIPInputStream(i);
+        	} catch (Exception e) {
+        		i = null;
+        	}
         }
 
         if (i == null && required) {
